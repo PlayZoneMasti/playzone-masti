@@ -4,137 +4,382 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PlayZone Masti - Snake Game</title>
+<meta name="theme-color" content="#10152c">
+<title>PlayZone Masti - Free Online Games</title>
+<meta name="description" content="PlayZone Masti par free online games kheliye. Snake, Tic Tac Toe, Memory, Puzzle aur bahut kuch.">
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:linear-gradient(135deg,#101827,#172c42);
- color:white;text-align:center;
- padding:20px 10px;
+body{margin:0;font-family:Arial,sans-serif;background:#0c1226;color:#fff}
+header{background:#131c38;padding:16px 5%;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;position:sticky;top:0;z-index:10;box-shadow:0 3px 15px #0006}
+.logo{font-size:25px;font-weight:bold;color:#43f5ad}
+nav{display:flex;gap:8px;flex-wrap:wrap}
+nav button,.btn{border:0;border-radius:9px;padding:10px 14px;background:#253454;color:white;cursor:pointer;font-weight:bold}
+nav button:hover,.btn:hover{background:#35dba0;color:#07152a}
+.hero{text-align:center;padding:65px 15px 45px;background:linear-gradient(135deg,#172b50,#301c56,#103b48)}
+.hero h1{font-size:clamp(32px,6vw,55px);margin:0 0 15px}
+.hero h1 span{color:#43f5ad}
+.hero p{color:#d0d9ed;font-size:17px}
+.hero .btn{background:#35e6a0;color:#08192a;padding:14px 25px;font-size:16px;margin-top:15px}
+.container{max-width:1100px;margin:auto;padding:25px 16px}
+.section-title{text-align:center;font-size:27px;margin:25px 0}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:17px}
+.card{background:#17223e;border:1px solid #293c60;border-radius:16px;padding:23px;text-align:center;transition:.2s}
+.card:hover{transform:translateY(-5px);border-color:#43f5ad}
+.emoji{font-size:48px}
+.card h3{margin:12px 0 7px}
+.card p{color:#bdc9df;min-height:35px}
+.card button{background:#35e6a0;color:#07152a;border:0;border-radius:8px;padding:11px 20px;font-weight:bold;cursor:pointer}
+.page{display:none;min-height:65vh}
+.page.active{display:block}
+.gamebox{max-width:520px;margin:20px auto;background:#17223e;padding:20px;border-radius:16px;text-align:center;border:1px solid #304363}
+.gamebox button{cursor:pointer;border:0;border-radius:8px;padding:11px 16px;margin:5px;background:#35e6a0;color:#07152a;font-weight:bold}
+.gamebox input{padding:12px;border-radius:8px;border:0;max-width:180px}
+#snakeCanvas{width:100%;max-width:380px;background:#07131b;border:3px solid #35e6a0;border-radius:9px;display:block;margin:15px auto}
+.controls{display:grid;grid-template-columns:repeat(3,60px);justify-content:center;gap:5px}
+.controls button{margin:0;padding:13px}
+.score{font-size:20px;color:#43f5ad;margin:12px}
+.board{display:grid;grid-template-columns:repeat(3,90px);justify-content:center;gap:7px;margin:20px}
+.cell{height:85px;background:#263957;color:#43f5ad;font-size:35px;border-radius:10px;display:grid;place-items:center;cursor:pointer}
+.memory{display:grid;grid-template-columns:repeat(4,65px);justify-content:center;gap:8px;margin:20px}
+.mem{height:65px;background:#304363;border-radius:10px;font-size:27px;display:grid;place-items:center;cursor:pointer}
+.mem.open{background:#35e6a0;color:#102030}
+#puzzle{display:grid;grid-template-columns:repeat(3,75px);gap:6px;justify-content:center;margin:20px}
+.tile{height:75px;font-size:24px;background:#304363;color:white;border-radius:8px;display:grid;place-items:center;cursor:pointer}
+.tile.empty{background:#0c1226}
+.info{max-width:750px;margin:25px auto;background:#17223e;padding:25px;border-radius:15px;line-height:1.8;color:#d6dfef}
+footer{text-align:center;background:#131c38;padding:25px;color:#b8c5d9;margin-top:40px}
+footer a{color:#43f5ad;text-decoration:none;margin:6px;display:inline-block}
+button:focus-visible{outline:2px solid white;outline-offset:3px}
+@media(max-width:550px){
+header{justify-content:center}
+nav{justify-content:center}
+nav button{padding:9px;font-size:12px}
+.hero{padding:45px 12px}
+.board{grid-template-columns:repeat(3,75px)}
+.cell{height:75px}
 }
-h1{color:#35e69a;margin:10px}
-p{color:#cbd5e1}
-.game{
- max-width:440px;margin:20px auto;
- background:#1e293b;padding:15px;
- border-radius:18px;
- box-shadow:0 8px 30px #0006;
-}
-.score{font-size:22px;color:#35e69a;margin:12px}
-canvas{
- width:100%;max-width:380px;
- background:#07131b;
- border:3px solid #35e69a;
- border-radius:10px;
- display:block;margin:auto;
-}
-button{
- border:0;border-radius:10px;
- padding:12px 20px;margin:6px;
- font-size:16px;font-weight:bold;
- background:#35e69a;color:#102030;
- cursor:pointer;
-}
-.controls{
- display:grid;grid-template-columns:repeat(3,65px);
- justify-content:center;gap:7px;margin-top:15px;
-}
-.controls button{margin:0;padding:14px}
-footer{margin-top:25px;color:#94a3b8;font-size:13px}
 </style>
 </head>
 <body>
-<h1>🎮 PlayZone Masti</h1>
-<p>Free Online Snake Game</p>
 
-<div class="game">
-<div class="score">Score: <span id="score">0</span></div>
-<canvas id="board" width="380" height="380"></canvas>
-<button onclick="startGame()">▶ Start / Restart</button>
+<header>
+<div class="logo">🎮 PlayZone Masti</div>
+<nav>
+<button onclick="showPage('home')">Home</button>
+<button onclick="showPage('games')">All Games</button>
+<button onclick="showPage('about')">About</button>
+<button onclick="showPage('contact')">Contact</button>
+</nav>
+</header>
+
+<section id="home" class="page active">
+<div class="hero">
+<h1>Welcome to <span>PlayZone Masti!</span></h1>
+<p>खेलिए, मजे कीजिए और अपना Best Score बनाइए!</p>
+<button class="btn" onclick="showPage('games')">🎮 Play Games Now</button>
+</div>
+<div class="container">
+<h2 class="section-title">🔥 Popular Games</h2>
+<div id="homeGames" class="games"></div>
+</div>
+</section>
+
+<section id="games" class="page">
+<div class="container">
+<h2 class="section-title">🎮 All Online Games</h2>
+<div id="allGames" class="games"></div>
+</div>
+</section>
+
+<section id="snake" class="page">
+<div class="container">
+<h2 class="section-title">🐍 Snake Game</h2>
+<div class="gamebox">
+<div class="score">Score: <span id="snakeScore">0</span></div>
+<canvas id="snakeCanvas" width="380" height="380"></canvas>
+<button onclick="startSnake()">▶ Start / Restart</button>
 <div class="controls">
-<div></div><button onclick="change(0,-1)">⬆️</button><div></div>
-<button onclick="change(-1,0)">⬅️</button>
-<button onclick="change(0,1)">⬇️</button>
-<button onclick="change(1,0)">➡️</button>
+<div></div><button onclick="snakeTurn(0,-1)">⬆️</button><div></div>
+<button onclick="snakeTurn(-1,0)">⬅️</button>
+<button onclick="snakeTurn(0,1)">⬇️</button>
+<button onclick="snakeTurn(1,0)">➡️</button>
 </div>
-<p id="message">Start दबाकर गेम खेलें!</p>
+<p id="snakeMsg">Start दबाकर खेलें!</p>
 </div>
+</div>
+</section>
 
-<footer>© 2026 PlayZone Masti | Enjoy Free Games</footer>
+<section id="tic" class="page">
+<div class="container">
+<h2 class="section-title">⭕ Tic Tac Toe</h2>
+<div class="gamebox">
+<p>दो खिलाड़ी खेल सकते हैं।</p>
+<div class="score" id="ticMsg">Player X की बारी</div>
+<div class="board" id="ticBoard"></div>
+<button onclick="resetTic()">🔄 New Game</button>
+</div>
+</div>
+</section>
+
+<section id="memory" class="page">
+<div class="container">
+<h2 class="section-title">🧠 Memory Match</h2>
+<div class="gamebox">
+<p>एक जैसे दो कार्ड खोजिए!</p>
+<div class="score">Moves: <span id="moves">0</span></div>
+<div class="memory" id="memoryBoard"></div>
+<p id="memoryMsg">सभी जोड़े मिलाइए!</p>
+<button onclick="startMemory()">🔄 Restart</button>
+</div>
+</div>
+</section>
+
+<section id="rps" class="page">
+<div class="container">
+<h2 class="section-title">✊ Rock Paper Scissors</h2>
+<div class="gamebox">
+<p>अपना चुनाव करें:</p>
+<button onclick="playRPS('✊')">✊ Rock</button>
+<button onclick="playRPS('✋')">✋ Paper</button>
+<button onclick="playRPS('✌️')">✌️ Scissors</button>
+<div class="score" id="rpsResult">चलो खेलते हैं!</div>
+<p id="rpsScore">आप: 0 | Computer: 0</p>
+<button onclick="resetRPS()">Reset Score</button>
+</div>
+</div>
+</section>
+
+<section id="puzzleGame" class="page">
+<div class="container">
+<h2 class="section-title">🔢 Number Puzzle</h2>
+<div class="gamebox">
+<p>1 से 8 तक नंबर सही क्रम में लगाइए। खाली जगह का उपयोग करें।</p>
+<div id="puzzle"></div>
+<p id="puzzleMsg">पहेली सुलझाइए!</p>
+<button onclick="newPuzzle()">🔄 New Puzzle</button>
+</div>
+</div>
+</section>
+
+<section id="about" class="page">
+<div class="container">
+<h2 class="section-title">About PlayZone Masti</h2>
+<div class="info">
+<h3>हमारे बारे में</h3>
+<p>PlayZone Masti एक मनोरंजन वेबसाइट है जहाँ आप अलग-अलग तरह के ऑनलाइन गेम मुफ्त में खेल सकते हैं।</p>
+<p>हमारा उद्देश्य लोगों को मोबाइल और कंप्यूटर पर आसान और मजेदार गेम खेलने का अनुभव देना है।</p>
+<p>यहाँ नए गेम और मनोरंजन से जुड़े फीचर्स जोड़ने का प्रयास किया जाता है।</p>
+</div>
+</div>
+</section>
+
+<section id="contact" class="page">
+<div class="container">
+<h2 class="section-title">Contact Us</h2>
+<div class="info">
+<p>PlayZone Masti के बारे में कोई सुझाव या शिकायत है तो आप हमसे संपर्क कर सकते हैं।</p>
+<p>संपर्क के लिए: अपनी ईमेल आईडी यहाँ जोड़ें।</p>
+<p>आप अपनी वेबसाइट की सही ईमेल आईडी बाद में यहाँ लगा सकते हैं।</p>
+</div>
+</div>
+</section>
+
+<section id="privacy" class="page">
+<div class="container">
+<h2 class="section-title">Privacy Policy</h2>
+<div class="info">
+<p>PlayZone Masti पर आने वाले लोगों की गोपनीयता हमारे लिए महत्वपूर्ण है।</p>
+<p>यह वेबसाइट कुछ गेम की जानकारी और स्कोर आपके ब्राउज़र में सेव कर सकती है।</p>
+<p>हम बिना अनुमति आपकी निजी जानकारी बेचने का दावा नहीं करते। वेबसाइट पर थर्ड पार्टी सेवाएँ जोड़ी जाने पर उनकी अपनी Privacy Policy लागू हो सकती है।</p>
+</div>
+</div>
+</section>
+
+<section id="disclaimer" class="page">
+<div class="container">
+<h2 class="section-title">Disclaimer</h2>
+<div class="info">
+<p>PlayZone Masti मनोरंजन के उद्देश्य से मुफ्त ऑनलाइन गेम उपलब्ध कराती है।</p>
+<p>गेम खेलने का अनुभव आपके डिवाइस और ब्राउज़र पर निर्भर कर सकता है।</p>
+<p>इस वेबसाइट पर दी गई जानकारी में बदलाव किया जा सकता है।</p>
+</div>
+</div>
+</section>
+
+<footer>
+<p>© 2026 PlayZone Masti | All Rights Reserved</p>
+<a href="#" onclick="showPage('home');return false">Home</a>
+<a href="#" onclick="showPage('about');return false">About</a>
+<a href="#" onclick="showPage('contact');return false">Contact</a>
+<a href="#" onclick="showPage('privacy');return false">Privacy Policy</a>
+<a href="#" onclick="showPage('disclaimer');return false">Disclaimer</a>
+</footer>
 
 <script>
-const canvas=document.getElementById("board");
-const ctx=canvas.getContext("2d");
-const size=19;
-let snake,food,dx,dy,score,timer,playing=false;
+const gameList=[
+{id:"snake",emoji:"🐍",name:"Snake Game",desc:"साँप को चलाइए और स्कोर बढ़ाइए"},
+{id:"tic",emoji:"⭕",name:"Tic Tac Toe",desc:"दो खिलाड़ियों का मजेदार गेम"},
+{id:"memory",emoji:"🧠",name:"Memory Match",desc:"एक जैसे कार्ड खोजिए"},
+{id:"rps",emoji:"✊",name:"Rock Paper Scissors",desc:"कंप्यूटर के साथ मुकाबला"},
+{id:"puzzleGame",emoji:"🔢",name:"Number Puzzle",desc:"नंबर सही क्रम में लगाइए"}
+];
 
-function randomFood(){
- return {
- x:Math.floor(Math.random()*20),
- y:Math.floor(Math.random()*20)
- };
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
+ window.scrollTo(0,0);
+ if(id==="snake"&&!snakeStarted)drawSnake();
+ if(id==="tic")renderTic();
+ if(id==="memory"&&!memoryStarted)startMemory();
+ if(id==="puzzleGame"&&!puzzleStarted)newPuzzle();
 }
-function draw(){
- ctx.fillStyle="#07131b";
- ctx.fillRect(0,0,380,380);
- ctx.fillStyle="#ff4757";
- ctx.beginPath();
- ctx.arc(food.x*19+9.5,food.y*19+9.5,8,0,Math.PI*2);
- ctx.fill();
- snake.forEach((part,i)=>{
- ctx.fillStyle=i===0?"#35e69a":"#16a36c";
- ctx.fillRect(part.x*19+1,part.y*19+1,17,17);
- });
+function makeCards(target){
+ document.getElementById(target).innerHTML=gameList.map(g=>
+ `<div class="card"><div class="emoji">${g.emoji}</div><h3>${g.name}</h3><p>${g.desc}</p><button onclick="showPage('${g.id}')">Play Now ▶</button></div>`
+ ).join("");
 }
-function startGame(){
- clearInterval(timer);
- snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
- dx=1;dy=0;score=0;
- document.getElementById("score").textContent=score;
- document.getElementById("message").textContent="खेल शुरू हो गया!";
- food=randomFood();
- playing=true;draw();
- timer=setInterval(move,130);
+makeCards("homeGames");
+makeCards("allGames");
+
+/* SNAKE GAME */
+const canvas=document.getElementById("snakeCanvas");
+const ctx=canvas.getContext("2d");
+let snake=[],food={x:5,y:5},dx=1,dy=0,snakeTimer=null,snakeScore=0,snakeStarted=false;
+function drawSnake(){
+ ctx.fillStyle="#07131b";ctx.fillRect(0,0,380,380);
+ ctx.fillStyle="#ff4757";ctx.beginPath();ctx.arc(food.x*19+9.5,food.y*19+9.5,8,0,7);ctx.fill();
+ snake.forEach((p,i)=>{ctx.fillStyle=i===0?"#35e69a":"#16a36c";ctx.fillRect(p.x*19+1,p.y*19+1,17,17)});
 }
-function change(x,y){
- if(!playing)return;
- if(x===-dx && y===-dy)return;
+function startSnake(){
+ clearInterval(snakeTimer);snake=[{x:10,y:10},{x:9,y:10},{x:8,y:10}];
+ dx=1;dy=0;snakeScore=0;snakeStarted=true;
+ document.getElementById("snakeScore").textContent=0;
+ document.getElementById("snakeMsg").textContent="खेल शुरू हो गया!";
+ placeFood();drawSnake();snakeTimer=setInterval(moveSnake,130);
+}
+function placeFood(){
+ do{food={x:Math.floor(Math.random()*20),y:Math.floor(Math.random()*20)}}
+ while(snake.some(p=>p.x===food.x&&p.y===food.y));
+}
+function snakeTurn(x,y){
+ if(!snakeStarted)return;
+ if(x===-dx&&y===-dy)return;
  dx=x;dy=y;
 }
-function move(){
+function moveSnake(){
  let head={x:snake[0].x+dx,y:snake[0].y+dy};
- if(head.x<0||head.x>=20||head.y<0||head.y>=20||
- snake.some(p=>p.x===head.x&&p.y===head.y)){
- gameOver();return;
+ if(head.x<0||head.x>=20||head.y<0||head.y>=20||snake.some(p=>p.x===head.x&&p.y===head.y)){
+ clearInterval(snakeTimer);snakeStarted=false;
+ document.getElementById("snakeMsg").textContent="गेम खत्म! स्कोर: "+snakeScore;return;
  }
  snake.unshift(head);
  if(head.x===food.x&&head.y===food.y){
- score+=10;
- document.getElementById("score").textContent=score;
- do{food=randomFood()}
- while(snake.some(p=>p.x===food.x&&p.y===food.y));
- }else{snake.pop()}
- draw();
-}
-function gameOver(){
- clearInterval(timer);playing=false;
- document.getElementById("message").textContent=
- "गेम खत्म! आपका स्कोर: "+score+" — फिर से खेलें!";
+ snakeScore+=10;document.getElementById("snakeScore").textContent=snakeScore;placeFood();
+ }else snake.pop();
+ drawSnake();
 }
 document.addEventListener("keydown",e=>{
- const keys={
- ArrowUp:[0,-1],ArrowDown:[0,1],
- ArrowLeft:[-1,0],ArrowRight:[1,0]
- };
- if(keys[e.key]){
- e.preventDefault();
- change(...keys[e.key]);
+ const k={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]};
+ if(k[e.key]&&document.getElementById("snake").classList.contains("active")){
+ e.preventDefault();snakeTurn(...k[e.key]);
  }
 });
-draw();
+drawSnake();
+
+/* TIC TAC TOE */
+let ticCells=Array(9).fill(""),ticTurn="X",ticDone=false;
+function renderTic(){
+ document.getElementById("ticBoard").innerHTML=ticCells.map((v,i)=>
+ `<div class="cell" onclick="ticPlay(${i})">${v}</div>`).join("");
+}
+function ticPlay(i){
+ if(ticCells[i]||ticDone)return;
+ ticCells[i]=ticTurn;
+ let wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+ let win=wins.some(a=>a.every(n=>ticCells[n]===ticTurn));
+ if(win){ticDone=true;document.getElementById("ticMsg").textContent="Player "+ticTurn+" जीत गए! 🎉"}
+ else if(ticCells.every(Boolean)){ticDone=true;document.getElementById("ticMsg").textContent="मैच ड्रॉ!"}
+ else{ticTurn=ticTurn==="X"?"O":"X";document.getElementById("ticMsg").textContent="Player "+ticTurn+" की बारी"}
+ renderTic();
+}
+function resetTic(){
+ ticCells=Array(9).fill("");ticTurn="X";ticDone=false;
+ document.getElementById("ticMsg").textContent="Player X की बारी";renderTic();
+}
+renderTic();
+
+/* MEMORY GAME */
+let memoryStarted=false,memoryCards=[],firstCard=null,locked=false,moves=0,matches=0;
+function startMemory(){
+ memoryStarted=true;memoryCards=["🐶","🐱","🐼","🦁","🐸","🐵","🐶","🐱","🐼","🦁","🐸","🐵"].sort(()=>Math.random()-.5);
+ firstCard=null;locked=false;moves=0;matches=0;
+ document.getElementById("moves").textContent=0;
+ document.getElementById("memoryMsg").textContent="सभी जोड़े मिलाइए!";
+ renderMemory();
+}
+function renderMemory(){
+ document.getElementById("memoryBoard").innerHTML=memoryCards.map((v,i)=>
+ `<div class="mem" id="mem${i}" onclick="flipMemory(${i})">❓</div>`).join("");
+}
+function flipMemory(i){
+ let el=document.getElementById("mem"+i);
+ if(locked||el.classList.contains("open")||el.dataset.done)return;
+ el.textContent=memoryCards[i];el.classList.add("open");
+ if(firstCard===null){firstCard=i;return}
+ moves++;document.getElementById("moves").textContent=moves;
+ if(memoryCards[firstCard]===memoryCards[i]){
+ document.getElementById("mem"+firstCard).dataset.done="1";el.dataset.done="1";
+ matches++;firstCard=null;
+ if(matches===6)document.getElementById("memoryMsg").textContent="बधाई हो! आपने गेम जीत लिया! 🎉";
+ }else{
+ locked=true;let old=firstCard;firstCard=null;
+ setTimeout(()=>{document.getElementById("mem"+old).textContent="❓";el.textContent="❓";document.getElementById("mem"+old).classList.remove("open");el.classList.remove("open");locked=false},750);
+ }
+}
+
+/* ROCK PAPER SCISSORS */
+let you=0,computer=0;
+function playRPS(choice){
+ let arr=["✊","✋","✌️"],bot=arr[Math.floor(Math.random()*3)],result="";
+ if(choice===bot)result="मैच ड्रॉ!";
+ else if((choice==="✊"&&bot==="✌️")||(choice==="✋"&&bot==="✊")||(choice==="✌️"&&bot==="✋")){result="आप जीत गए! 🎉";you++}
+ else{result="कंप्यूटर जीत गया!";computer++}
+ document.getElementById("rpsResult").textContent="आप "+choice+" | कंप्यूटर "+bot+" — "+result;
+ document.getElementById("rpsScore").textContent="आप: "+you+" | Computer: "+computer;
+}
+function resetRPS(){
+ you=0;computer=0;
+ document.getElementById("rpsScore").textContent="आप: 0 | Computer: 0";
+ document.getElementById("rpsResult").textContent="चलो खेलते हैं!";
+}
+
+/* NUMBER PUZZLE */
+let puzzle=[1,2,3,4,5,6,7,8,0],puzzleStarted=false;
+function newPuzzle(){
+ puzzleStarted=true;
+ do{puzzle=[1,2,3,4,5,6,7,8,0].sort(()=>Math.random()-.5)}
+ while(!solvable(puzzle)||puzzle.every((v,i)=>v===(i+1)%9));
+ renderPuzzle();
+ document.getElementById("puzzleMsg").textContent="खाली जगह के पास वाला नंबर चलाइए।";
+}
+function solvable(a){
+ let inv=0;
+ for(let i=0;i<9;i++)for(let j=i+1;j<9;j++)if(a[i]&&a[j]&&a[i]>a[j])inv++;
+ return inv%2===0;
+}
+function renderPuzzle(){
+ document.getElementById("puzzle").innerHTML=puzzle.map((v,i)=>
+ `<div class="tile ${v===0?"empty":""}" onclick="moveTile(${i})">${v||""}</div>`).join("");
+}
+function moveTile(i){
+ let empty=puzzle.indexOf(0);
+ if(Math.abs(Math.floor(i/3)-Math.floor(empty/3))+Math.abs(i%3-empty%3)!==1)return;
+ [puzzle[i],puzzle[empty]]=[puzzle[empty],puzzle[i]];
+ renderPuzzle();
+ if(puzzle.every((v,i)=>v===(i+1)%9))document.getElementById("puzzleMsg").textContent="शानदार! आपने पहेली सुलझा दी! 🎉";
+}
 </script>
 </body>
-  </html>
+ </html>
+ 
   
